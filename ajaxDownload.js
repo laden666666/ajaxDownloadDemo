@@ -11,6 +11,8 @@
             throw new Error('URL cannot be empty');
         }
         var self = this;
+
+        //是否在cors中启用cookie
         self.withCredentials = !!option.credentials;
         self._successFn = option.success;
         self._errorFn = option.error;
@@ -18,8 +20,7 @@
         self._loadstartFn = option.loadstart;
 
         var xhr = self.xhr = new XMLHttpRequest();
-        xhr.setRequestHeader('Content-type', 'charset=utf-8');
-        xhr.open(option.type ? option.type.toUpperCase() : 'GET', url, true);
+        xhr.open(option.type ? option.type.toUpperCase() : 'GET', option.url, true);
         xhr.responseType = 'blob';
 
         xhr.onloadstart = function () {
@@ -27,8 +28,8 @@
         }
 
         xhr.onload = function () {
-            if (self.status == 200) {
-                var blob = new Blob([this.response], {type: response.type});
+            if (this.status == 200) {
+                var blob = new Blob([this.response], {type: this.response.type});
                 var downloadUrl = URL.createObjectURL(blob);
                 var a = document.createElement("a");
                 a.href = downloadUrl;
@@ -48,13 +49,17 @@
             typeof self._progressFn == 'function' && self._progressFn({
                 total: tot,
                 loaded: loaded,
-                percent: loaded/tot,
+                percent: Math.floor(100*loaded/tot),
             });
         }
     }
 
     AjaxDownload.prototype.send = function () {
         this.xhr.send('');
+    }
+
+    AjaxDownload.prototype.abort = function () {
+        this.xhr.abort();
     }
 
 })(window)

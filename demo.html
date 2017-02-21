@@ -7,18 +7,38 @@
     <script src="ajaxDownload.js"></script>
 </head>
 <body>
-    <ul>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-    </ul>
+    <ul id="downloadList"></ul>
+    <button id="addDownload">新建下载</button>
     <script>
-        var ajaxDownload = new AjaxDownload(url);
+        $("#addDownload").click(function () {
+            var downloadPad;
+            var ajaxDownload = new AjaxDownload({
+                url:'689.dmg',
+                progress: function (event) {
+                    downloadPad.find(".progress").attr('value', event.percent)
+                },
+                success: function () {
+                    alert('下载完成');
+                },
+                error: function () {
+                    alert('下载失败');
+                },
+                loadstart: function () {
+                    downloadPad = $(`<li>
+                            <progress class="progress" value="0" max="100"></progress>
+                            <button class="abort">取消</button>
+                    </li>`);
+
+                    $("#downloadList").append(downloadPad);
+                    downloadPad.find(".abort").click(function () {
+                        ajaxDownload.abort();
+                    })
+                }
+            });
+            ajaxDownload.send();
+        })
+
+
     </script>
 </body>
 </html>

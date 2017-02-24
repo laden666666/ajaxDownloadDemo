@@ -1,44 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title></title>
-    <script src="jquery-3.1.1.js"></script>
-    <script src="ajaxDownload.js"></script>
-</head>
-<body>
-    <ul id="downloadList"></ul>
-    <button id="addDownload">新建下载</button>
-    <script>
-        $("#addDownload").click(function () {
-            var downloadPad;
-            var ajaxDownload = new AjaxDownload({
-                url:'689.dmg',
-                progress: function (event) {
-                    downloadPad.find(".progress").attr('value', event.percent)
-                },
-                success: function () {
-                    alert('下载完成');
-                },
-                error: function () {
-                    alert('下载失败');
-                },
-                loadstart: function () {
-                    downloadPad = $(`<li>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="jquery-3.1.1.js"></script>
+		<script src="ajaxDownload.js"></script>
+		<style>
+			#addDownload {
+				margin: 0px;
+				font-style: inherit;
+				font-variant: inherit;
+				font-stretch: inherit;
+				font-size: 18px;
+				line-height: 1.33333;
+				font-family: inherit;
+				color: rgb(255, 255, 255);
+				overflow: visible;
+				cursor: pointer;
+				padding: 10px 16px;
+				white-space: nowrap;
+				vertical-align: middle;
+				touch-action: manipulation;
+				user-select: none;
+				background-image: none;
+				border-width: 1px;
+				border-style: solid;
+				border-color: rgb(46, 109, 164);
+				border-radius: 6px;
+				background-color: rgb(51, 122, 183);
+			}
+			
+			.abort {
+				margin: 0px;
+				font-style: inherit;
+				font-variant: inherit;
+				font-stretch: inherit;
+				font-size: 12px;
+				line-height: 1.5;
+				font-family: inherit;
+				color: rgb(255, 255, 255);
+				overflow: visible;
+				cursor: pointer;
+				padding: 5px 10px;
+				white-space: nowrap;
+				vertical-align: middle;
+				touch-action: manipulation;
+				user-select: none;
+				background-image: none;
+				border-width: 1px;
+				border-style: solid;
+				border-color: rgb(46, 109, 164);
+				border-radius: 3px;
+				background-color: rgb(51, 122, 183);
+			}
+			
+			.progress {
+			    width: 160px;
+			    height: 28px;
+			    border: 1px solid #0064B4;  
+			    background-color:#e6e6e6;
+			    color: #0064B4; /*IE10*/
+			   margin-right: 10px;
+			}
+			.progress::-moz-progress-bar { background: #0064B4; }
+			.progress::-webkit-progress-bar { background: #e6e6e6; }
+			.progress::-webkit-progress-value  { background: #0064B4; }
+			
+			ul{
+				list-style: none;
+			}
+			li{
+				display: flex;
+				justify-content: center;
+			}
+		</style>
+	</head>
+
+	<body>
+		<ul id="downloadList"></ul>
+		<button id="addDownload">新建下载</button>
+		<script>
+			$("#addDownload").click(function() {
+				var downloadPad;
+				var ajaxDownload = new AjaxDownload({
+					url: 'download.txt',
+					progress: function(event) {
+						downloadPad.find(".progress").attr('value', event.percent)
+					},
+					success: function() {
+						alert('下载完成');
+					},
+					error: function() {
+						alert('下载失败');
+					},
+					loadstart: function() {
+						downloadPad = $(`<li>
                             <progress class="progress" value="0" max="100"></progress>
                             <button class="abort">取消</button>
                     </li>`);
 
-                    $("#downloadList").append(downloadPad);
-                    downloadPad.find(".abort").click(function () {
-                        ajaxDownload.abort();
-                    })
-                }
-            });
-            ajaxDownload.send();
-        })
+						$("#downloadList").append(downloadPad);
+						downloadPad.find(".abort").click(function() {
+							ajaxDownload.abort();
+						})
+					}
+				});
+				ajaxDownload.send();
+			})
+		</script>
+	</body>
 
-
-    </script>
-</body>
 </html>

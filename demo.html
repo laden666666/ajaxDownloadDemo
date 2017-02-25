@@ -1,114 +1,231 @@
 <!DOCTYPE html>
 <html lang="en">
 
-	<head>
-		<meta charset="UTF-8">
-		<title></title>
-		<script src="jquery-3.1.1.js"></script>
-		<script src="ajaxDownload.js"></script>
-		<style>
-			#addDownload {
-				margin: 0px;
-				font-style: inherit;
-				font-variant: inherit;
-				font-stretch: inherit;
-				font-size: 18px;
-				line-height: 1.33333;
-				font-family: inherit;
-				color: rgb(255, 255, 255);
-				overflow: visible;
-				cursor: pointer;
-				padding: 10px 16px;
-				white-space: nowrap;
-				vertical-align: middle;
-				touch-action: manipulation;
-				user-select: none;
-				background-image: none;
-				border-width: 1px;
-				border-style: solid;
-				border-color: rgb(46, 109, 164);
-				border-radius: 6px;
-				background-color: rgb(51, 122, 183);
-			}
-			
-			.abort {
-				margin: 0px;
-				font-style: inherit;
-				font-variant: inherit;
-				font-stretch: inherit;
-				font-size: 12px;
-				line-height: 1.5;
-				font-family: inherit;
-				color: rgb(255, 255, 255);
-				overflow: visible;
-				cursor: pointer;
-				padding: 5px 10px;
-				white-space: nowrap;
-				vertical-align: middle;
-				touch-action: manipulation;
-				user-select: none;
-				background-image: none;
-				border-width: 1px;
-				border-style: solid;
-				border-color: rgb(46, 109, 164);
-				border-radius: 3px;
-				background-color: rgb(51, 122, 183);
-			}
-			
-			.progress {
-			    width: 160px;
-			    height: 28px;
-			    border: 1px solid #0064B4;  
-			    background-color:#e6e6e6;
-			    color: #0064B4; /*IE10*/
-			   margin-right: 10px;
-			}
-			.progress::-moz-progress-bar { background: #0064B4; }
-			.progress::-webkit-progress-bar { background: #e6e6e6; }
-			.progress::-webkit-progress-value  { background: #0064B4; }
-			
-			ul{
-				list-style: none;
-			}
-			li{
-				display: flex;
-				justify-content: center;
-			}
-		</style>
-	</head>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="jquery-3.1.1.js"></script>
+    <script src="ajaxDownload.js"></script>
+    <style>
 
-	<body>
-		<ul id="downloadList"></ul>
-		<button id="addDownload">新建下载</button>
-		<script>
-			$("#addDownload").click(function() {
-				var downloadPad;
-				var ajaxDownload = new AjaxDownload({
-					url: 'download.txt',
-					progress: function(event) {
-						downloadPad.find(".progress").attr('value', event.percent)
-					},
-					success: function() {
-						alert('下载完成');
-					},
-					error: function() {
-						alert('下载失败');
-					},
-					loadstart: function() {
-						downloadPad = $(`<li>
-                            <progress class="progress" value="0" max="100"></progress>
-                            <button class="abort">取消</button>
-                    </li>`);
+        #example {
+            position: relative;
+            color: rgb(51, 51, 51);
+            font-size: 14px;
+            text-align: start;
+        }
 
-						$("#downloadList").append(downloadPad);
-						downloadPad.find(".abort").click(function() {
-							ajaxDownload.abort();
-						})
-					}
-				});
-				ajaxDownload.send();
-			})
-		</script>
-	</body>
+        .plupload_wrapper {
+            font-stretch: normal;
+            font-size: 11px;
+            font-family: Verdana, sans-serif;
+            width: 940px;
+            min-width: 520px;
+            line-height: 12px;
+            margin: 0 auto;
+        }
+
+        .plupload_container {
+            position: relative;
+            border: 1px solid rgb(170, 170, 170);
+            color: rgb(34, 34, 34);
+            box-sizing: content-box;
+            min-height: 300px;
+        }
+
+        .plupload_header {
+            border-width: 0px 0px 1px;
+            border-style: solid;
+            border-color: rgb(211, 211, 211);
+            border-image: initial;
+            color: rgb(85, 85, 85);
+            box-sizing: content-box;
+            position: relative;
+        }
+
+        .plupload_header_content {
+            box-sizing: content-box;
+            height: 56px;
+            padding: 0px 20px 0px 20px;
+            position: relative;
+            background: #CCCCCC;
+            border-bottom: 1px solid #AAAAAA;
+        }
+
+        .plupload_header_title {
+            box-sizing: content-box;
+            font-stretch: normal;
+            font-size: 18px;
+            font-family: sans-serif;
+            line-height: 19px;
+            padding: 6px 0px 3px;
+        }
+
+        .plupload_header_text {
+            box-sizing: content-box;
+            font-stretch: normal;
+            line-height: normal;
+            font-family: sans-serif;
+        }
+
+        .plupload_content {
+            box-sizing: border-box;
+            position: absolute;
+            top: 57px;
+            bottom: 44px;
+            left: 0px;
+            right: 0px;
+            overflow-y: auto;
+            width: 938px;
+        }
+        .plupload_content_list{
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+        .plupload_content_item{
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        .plupload_content_item_progress{
+            width: 160px;
+            height: 28px;
+            border: 1px solid #0064B4;
+            background-color: #e6e6e6;
+            color: #0064B4; /*IE10*/
+            margin-right: 10px;
+            flex: 1;
+        }
+        .plupload_content_item_progress::-moz-progress-bar {
+            background: #0064B4;
+        }
+
+        .plupload_content_item_progress::-webkit-progress-bar {
+            background: #e6e6e6;
+        }
+
+        .plupload_content_item_progress::-webkit-progress-value {
+            background: #0064B4;
+        }
+
+
+        .plupload_footer {
+            max-width: 100%;
+            background: rgb(204, 204, 204);
+            border-collapse: collapse;
+            border-spacing: 0px;
+            border-top: 1px solid rgb(170, 170, 170);
+            border-right: none;
+            border-bottom: 0px solid rgb(170, 170, 170);
+            border-left: none;
+            border-image: initial;
+            font-weight: bold;
+            box-sizing: content-box;
+            margin: 0px;
+            padding: 0px;
+            width: 938px;
+            user-select: none;
+            position: absolute;
+            bottom: 0px;
+            left: 0px;
+            right: 0px;
+            padding: 5px;
+            box-sizing: border-box;
+        }
+
+        .plupload_button {
+            color: rgb(85, 85, 85);
+            display: inline-block;
+            position: relative;
+            padding: 0px;
+            line-height: normal;
+            margin-right: 0.1em;
+            cursor: pointer;
+            vertical-align: middle;
+            text-align: center;
+            overflow: visible;
+            font-family: Verdana, Arial, sans-serif;
+            font-size: 1.1em;
+            border: 1px solid rgb(211, 211, 211);
+            background: rgb(230, 230, 230);
+            font-weight: normal;
+            border-radius: 4px;
+            box-sizing: content-box;
+            outline: none;
+            z-index: 1;
+        }
+
+        .plupload_button_text {
+            box-sizing: content-box;
+            display: block;
+            line-height: normal;
+            padding: 0.4em 1em 0.4em 1em;
+        }
+
+
+    </style>
+</head>
+
+<body>
+
+    <div id="example"
+         style="">
+        <div id="uploader">
+            <div class="plupload_wrapper">
+                <div class="plupload_container" id="uploader_container">
+                    <div class="plupload_header">
+                        <div class="plupload_header_content">
+                            <div class="plupload_header_title">
+                                ajax下载dom
+                            </div>
+                            <div class="plupload_header_text">
+                                点击"新建下载"按钮,测试ajax下载
+                            </div>
+                        </div>
+                    </div>
+                    <div class="plupload_content">
+                        <div class="plupload_content_list" id="downloadList">
+
+                        </div>
+                    </div>
+                    <div class="plupload_footer">
+                        <a class="plupload_button" id="addDownload"><span class="plupload_button_text">新建下载</span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    $("#addDownload").click(function () {
+        var downloadPad;
+        var ajaxDownload = new AjaxDownload({
+            url: 'download.zip',
+            progress: function (event) {
+                downloadPad.find(".progress").attr('value', event.percent)
+            },
+            success: function () {
+                alert('下载完成');
+            },
+            error: function () {
+                alert('下载失败');
+            },
+            loadstart: function () {
+                downloadPad = $(`<div class="plupload_content_item">
+                            <progress class="plupload_content_item_progress progress" value="0" max="100"></progress>
+                            <button class="plupload_button abort"><span class="plupload_button_text">取消</span></button>
+                    </div>`);
+
+                $("#downloadList").append(downloadPad);
+                downloadPad.find(".abort").click(function () {
+                    ajaxDownload.abort();
+                })
+            }
+        });
+        ajaxDownload.send();
+    })
+</script>
+</body>
 
 </html>

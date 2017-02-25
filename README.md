@@ -1,2 +1,3 @@
 # ajaxDownloadDemo
 一个ajax下载文件的demo
+请将整个文件放入nginx这样的服务器中,并制作一个download.zip文件放入同级目录中。然后浏览器打开demo.html便可查看效果

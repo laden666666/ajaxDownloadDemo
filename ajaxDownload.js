@@ -12,8 +12,6 @@
         }
         var self = this;
 
-        //是否在cors中启用cookie
-        self.withCredentials = !!option.credentials;
         self._successFn = option.success;
         self._errorFn = option.error;
         self._progressFn = option.progress;
@@ -21,6 +19,8 @@
         
         var xhr = self.xhr = new XMLHttpRequest();
         xhr.open(option.type ? option.type.toUpperCase() : 'GET', option.url, true);
+        //是否在cors中启用cookie
+        xhr.withCredentials = !!option.credentials;
         xhr.responseType = 'blob';
 
         xhr.onloadstart = function () {
@@ -82,3 +82,4 @@
     }
 
 })(window)
+

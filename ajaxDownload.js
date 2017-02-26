@@ -28,14 +28,25 @@
         }
 
         xhr.onload = function () {
-            if (this.status == 200) {
+            //对于重定向的文件不予理会
+            if (this.status >= 200 && this.status < 300) {
+                //如果给定了附件名称,优先取给定的名称,否则取http协议中的,如果也没有使用url最后一个字段
+                var fileName = option.fileName || (this.getAllResponseHeaders().indexOf('filename=') > -1
+                        ? this.getAllResponseHeaders().split("filename=")[0].split("\n")[0].split(";")[0]
+                        : option.url.split("#")[0].split("/").pop());
                 var blob = new Blob([this.response], {type: this.response.type});
-                var downloadUrl = URL.createObjectURL(blob);
-                var a = document.createElement("a");
-                a.setAttribute("target","_blank");
-                a.href = downloadUrl;
-                document.body.appendChild(a);
-                a.click();
+
+                //ie的下载
+                if (window.navigator.msSaveOrOpenBlob) {
+                    navigator.msSaveBlob(blob, fileName);
+                } else {
+                    //非ie的下载
+                    var link = document.createElement('a');
+                    link.href = window.URL.createObjectURL(blob);
+                    link.download = fileName;
+                    link.click();
+                    window.URL.revokeObjectURL(link.href);
+                }
                 typeof self._successFn == 'function' && self._successFn(blob);
             } else {
                 typeof self._errorFn == 'function' && self._errorFn();

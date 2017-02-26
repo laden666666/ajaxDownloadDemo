@@ -205,7 +205,20 @@
                     downloadPad.find(".progress").attr('value', event.percent)
                 },
                 success: function () {
-                    alert('下载完成');
+                    if(Notification && Notification.requestPermission) {
+
+                        Notification.requestPermission(function (perm) {
+                            if (perm == "granted") {
+                                var notification = new Notification("下载报告:", {
+                                    dir: "auto",
+                                    tag: "提示",
+                                    body: "下载完成"
+                                });
+                            }
+                        })
+                    } else {
+                        alert('下载完成');
+                    }
                 },
                 error: function () {
                     alert('下载失败');

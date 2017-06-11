@@ -15,7 +15,7 @@
             text-align: start;
         }
 
-        .plupload_wrapper {
+        .ajaxdownload_wrapper {
             font-stretch: normal;
             font-size: 11px;
             font-family: Verdana, sans-serif;
@@ -25,7 +25,7 @@
             margin: 0 auto;
         }
 
-        .plupload_container {
+        .ajaxdownload_container {
             position: relative;
             border: 1px solid rgb(170, 170, 170);
             color: rgb(34, 34, 34);
@@ -33,7 +33,7 @@
             min-height: 300px;
         }
 
-        .plupload_header {
+        .ajaxdownload_header {
             border-width: 0px 0px 1px;
             border-style: solid;
             border-color: rgb(211, 211, 211);
@@ -43,7 +43,7 @@
             position: relative;
         }
 
-        .plupload_header_content {
+        .ajaxdownload_header_content {
             box-sizing: content-box;
             height: 56px;
             padding: 0px 20px 0px 20px;
@@ -52,7 +52,7 @@
             border-bottom: 1px solid #AAAAAA;
         }
 
-        .plupload_header_title {
+        .ajaxdownload_header_title {
             box-sizing: content-box;
             font-stretch: normal;
             font-size: 18px;
@@ -61,14 +61,14 @@
             padding: 6px 0px 3px;
         }
 
-        .plupload_header_text {
+        .ajaxdownload_header_text {
             box-sizing: content-box;
             font-stretch: normal;
             line-height: normal;
             font-family: sans-serif;
         }
 
-        .plupload_content {
+        .ajaxdownload_content {
             box-sizing: border-box;
             position: absolute;
             top: 57px;
@@ -78,17 +78,17 @@
             overflow-y: auto;
             width: 938px;
         }
-        .plupload_content_list{
+        .ajaxdownload_content_list{
             padding: 10px;
             display: flex;
             flex-direction: column;
         }
-        .plupload_content_item{
+        .ajaxdownload_content_item{
             display: flex;
             justify-content: center;
             margin-bottom: 10px;
         }
-        .plupload_content_item_progress{
+        .ajaxdownload_content_item_progress{
             width: 160px;
             height: 28px;
             border: 1px solid #0064B4;
@@ -97,20 +97,20 @@
             margin-right: 10px;
             flex: 1;
         }
-        .plupload_content_item_progress::-moz-progress-bar {
+        .ajaxdownload_content_item_progress::-moz-progress-bar {
             background: #0064B4;
         }
 
-        .plupload_content_item_progress::-webkit-progress-bar {
+        .ajaxdownload_content_item_progress::-webkit-progress-bar {
             background: #e6e6e6;
         }
 
-        .plupload_content_item_progress::-webkit-progress-value {
+        .ajaxdownload_content_item_progress::-webkit-progress-value {
             background: #0064B4;
         }
 
 
-        .plupload_footer {
+        .ajaxdownload_footer {
             max-width: 100%;
             background: rgb(204, 204, 204);
             border-collapse: collapse;
@@ -134,7 +134,7 @@
             box-sizing: border-box;
         }
 
-        .plupload_button {
+        .ajaxdownload_button {
             color: rgb(85, 85, 85);
             display: inline-block;
             position: relative;
@@ -156,7 +156,7 @@
             z-index: 1;
         }
 
-        .plupload_button_text {
+        .ajaxdownload_button_text {
             box-sizing: content-box;
             display: block;
             line-height: normal;
@@ -172,60 +172,72 @@
     <div id="example"
          style="">
         <div id="uploader">
-            <div class="plupload_wrapper">
-                <div class="plupload_container" id="uploader_container">
-                    <div class="plupload_header">
-                        <div class="plupload_header_content">
-                            <div class="plupload_header_title">
+            <div class="ajaxdownload_wrapper">
+                <div class="ajaxdownload_container" id="uploader_container">
+                    <div class="ajaxdownload_header">
+                        <div class="ajaxdownload_header_content">
+                            <div class="ajaxdownload_header_title">
                                 ajax下载dom
                             </div>
-                            <div class="plupload_header_text">
+                            <div class="ajaxdownload_header_text">
                                 点击"新建下载"按钮,测试ajax下载
                             </div>
                         </div>
                     </div>
-                    <div class="plupload_content">
-                        <div class="plupload_content_list" id="downloadList">
+                    <div class="ajaxdownload_content">
+                        <div class="ajaxdownload_content_list" id="downloadList">
 
                         </div>
                     </div>
-                    <div class="plupload_footer">
-                        <a class="plupload_button" id="addDownload"><span class="plupload_button_text">新建下载</span></a>
+                    <div class="ajaxdownload_footer">
+                        <a class="ajaxdownload_button" id="addDownload"><span class="ajaxdownload_button_text">新建下载</span></a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <script>
+        $("#addDownload").click(function () {
+            var downloadPad;
+            var ajaxDownload = new AjaxDownload({
+                url: 'download.zip',
+                progress: function (event) {
+                    downloadPad.find(".progress").attr('value', event.percent)
+                },
+                success: function () {
+                    if(Notification && Notification.requestPermission) {
 
-<script>
-    $("#addDownload").click(function () {
-        var downloadPad;
-        var ajaxDownload = new AjaxDownload({
-            url: 'download.zip',
-            progress: function (event) {
-                downloadPad.find(".progress").attr('value', event.percent)
-            },
-            success: function () {
-                alert('下载完成');
-            },
-            error: function () {
-                alert('下载失败');
-            },
-            loadstart: function () {
-                downloadPad = $(`<div class="plupload_content_item">
-                            <progress class="plupload_content_item_progress progress" value="0" max="100"></progress>
-                            <button class="plupload_button abort"><span class="plupload_button_text">取消</span></button>
-                    </div>`);
+                        Notification.requestPermission(function (perm) {
+                            if (perm == "granted") {
+                                var notification = new Notification("下载报告:", {
+                                    dir: "auto",
+                                    tag: "提示",
+                                    body: "下载完成"
+                                });
+                            }
+                        })
+                    } else {
+                        alert('下载完成');
+                    }
+                },
+                error: function () {
+                    alert('下载失败');
+                },
+                loadstart: function () {
+                    downloadPad = $(`<div class="ajaxdownload_content_item">
+                                <progress class="ajaxdownload_content_item_progress progress" value="0" max="100"></progress>
+                                <button class="ajaxdownload_button abort"><span class="ajaxdownload_button_text">取消</span></button>
+                        </div>`);
 
-                $("#downloadList").append(downloadPad);
-                downloadPad.find(".abort").click(function () {
-                    ajaxDownload.abort();
-                })
-            }
-        });
-        ajaxDownload.send();
-    })
-</script>
+                    $("#downloadList").append(downloadPad);
+                    downloadPad.find(".abort").click(function () {
+                        ajaxDownload.abort();
+                    })
+                }
+            });
+            ajaxDownload.send();
+        })
+    </script>
 </body>
 
 </html>

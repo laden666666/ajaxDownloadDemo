@@ -28,7 +28,7 @@
         }
 
         xhr.onload = function () {
-            if (this.status == 200) {
+            if (this.status < 400 || this.status >= 200) {
                 var blob = new Blob([this.response], {type: this.response.type});
                 var downloadUrl = URL.createObjectURL(blob);
                 var a = document.createElement("a");
